@@ -1,0 +1,12 @@
+export {};
+const root='http://127.0.0.1:3001';
+async function api(path:string,method='GET',body?:unknown){const r=await fetch(root+path,{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});const d=await r.json();if(!r.ok)throw new Error(d.error||String(r.status));return d;}
+const id='ffc7d71f-886b-41e2-9a6c-9729b7a59bce';let c=await api(`/api/cases/${id}`);if(!c.brief.title.startsWith('QA '))throw new Error('Use only a QA rehearsal case.');
+const before=await api(`/api/crustdata/requests?caseId=${id}`);
+if(c.status==='complete'&&c.version===1){console.log(JSON.stringify({phase:'before',status:c.status,version:c.version,documents:c.artifacts.filter((a:any)=>a.version===c.version&&a.state==='current').length}));const candidate=c.candidates.find((x:any)=>!x.rejected);c=await api(`/api/cases/${id}/reject`,'POST',{candidateId:candidate.id,expectedVersion:c.version});}else if(!(c.status==='needs_input'&&c.version===2))throw new Error('This QA check has already run or is not at its expected checkpoint.');
+async function terminal(){for(let i=0;i<120;i++){c=await api(`/api/cases/${id}`);if(['complete','error','needs_input'].includes(c.status))return;await new Promise(r=>setTimeout(r,2000));}}
+await terminal();if(c.status==='needs_input'){console.log(JSON.stringify({phase:'correct-handoff',status:c.status,note:'The rejected provider was the only one clearing the checks. A decision is required.'}));await api(`/api/cases/${id}/decision`,'POST',{expectedVersion:c.version,instruction:'QA regression check only: prepare a quote-stage comparison, quote-request drafts, and handover for the remaining candidates. Preserve all unknowns. Do not select a winner, confirm availability or pricing, make a booking, or send anything externally.'});await terminal();}
+if(c.status!=='complete')throw new Error('Rebuild did not finish: '+c.status);
+const one=await api(`/api/cases/${id}/dispatch`,'POST',{expectedVersion:c.version});const two=await api(`/api/cases/${id}/dispatch`,'POST',{expectedVersion:c.version});const after=await api(`/api/crustdata/requests?caseId=${id}`);
+if(one.item.id!==two.item.id||two.case.inbox.length!==1)throw new Error('Duplicate dispatch was not prevented.');
+console.log(JSON.stringify({phase:'rebuilt',status:c.status,version:c.version,documents:c.artifacts.filter((a:any)=>a.version===c.version&&a.state==='current').length,newNetworkAttempts:after.counts.networkAttempts-before.counts.networkAttempts,duplicateDispatchPrevented:true,inboxItems:two.case.inbox.length}));
