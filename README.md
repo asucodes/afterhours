@@ -123,43 +123,43 @@ AfterHours combines a **versioned workflow**, **candidate-scoped evidence**, **b
 ```mermaid
 flowchart TB
     subgraph Browser["BROWSER · React + TypeScript + Vite"]
-        Office["Pixel headquarters + team chat<br/>Coworker state · Work log · Supervisor controls"]
-        Workspace["Case workspace + Mission state<br/>Shortlist · Evidence · Markdown · Revisions · Inbox"]
-        AuditUI["Crustdata request inspector<br/>Inputs · Responses · Attempts · Cache reuse"]
+        Office["Pixel headquarters<br/>Team chat + work log"]
+        Workspace["Case workspace<br/>Evidence + documents + Mission state"]
+        AuditUI["Request inspector<br/>Inputs + responses + attempts"]
     end
 
     subgraph Backend["LOCAL BACKEND · Express / Node.js"]
-        Commands["HTTP command boundary<br/>Zod validation · expectedVersion checks"]
-        Brief["Brief interpretation<br/>Normalize missing fields · Derive requirements"]
-        Planner["Dependency-aware replanning<br/>Compare fields · Increment version<br/>Supersede affected tasks and artifacts"]
-        Runner["Workflow execution<br/>Reuse completed tasks · Deduplicate active starts<br/>Candidate batches of two · Pause and version gates"]
-        Evidence["Evidence and assessment controls<br/>Candidate association · Source-quality filters<br/>Citation normalization · Commercial unknowns"]
-        Decision["Qualification and decision gate<br/>Qualified candidate OR recorded exception"]
-        Package["Versioned handover<br/>Comparison · Quote drafts · Checklist<br/>ZIP export · Idempotent internal dispatch"]
-        Model["Model adapter<br/>Role-specific context · JSON parsing<br/>Zod output validation · Bounded repair"]
-        Crust["Crustdata adapter<br/>Tool allowlist · Fixed execute scripts<br/>Cache · Shared pacing · Retry and reconnect"]
-        Events["Persist and publish<br/>Case EventEmitter + trace EventEmitter<br/>SSE snapshots · Heartbeats"]
+        Commands["HTTP command boundary<br/>Zod + version checks"]
+        Brief["Brief interpreter<br/>Validated requirements"]
+        Planner["Replan rules<br/>Dependencies + invalidation"]
+        Runner["Workflow runner<br/>Task reuse + bounded concurrency"]
+        Evidence["Evidence controls<br/>Source filters + citation checks"]
+        Decision["Decision gate<br/>Qualification + recorded exceptions"]
+        Package["Handover service<br/>Artifacts + export + internal dispatch"]
+        Model["Model adapter<br/>Context + validation + repair"]
+        Crust["Crustdata adapter<br/>Allowlist + cache + retry policy"]
+        Events["State publication<br/>Persistence + event buses + SSE"]
     end
 
     subgraph Storage["PERSISTENCE · SQLite / WAL"]
-        Cases[("cases<br/>Brief versions · Tasks · Evidence<br/>Messages · Artifacts · Decisions · Inbox")]
-        Cache[("cache<br/>Exact tool + parameters<br/>24-hour expiry")]
-        Traces[("crust_requests<br/>Sanitized inputs and response previews<br/>Attempt history · Case and version context")]
+        Cases[("cases<br/>Versioned case snapshots")]
+        Cache[("cache<br/>Exact keys + 24-hour TTL")]
+        Traces[("crust_requests<br/>Sanitized captures + attempts")]
     end
 
     subgraph External["EXTERNAL PROVIDERS"]
-        LLM["TokenHarbor Chat Completions<br/>DeepSeek V4.1 Flash<br/>Interpret · Select · Assess · Write · Answer"]
-        MCP["Crustdata hosted MCP<br/>Streamable HTTP + server-side authentication<br/>Company · People · Public web tools"]
+        LLM["TokenHarbor<br/>DeepSeek V4.1 Flash"]
+        MCP["Crustdata hosted MCP<br/>Company + people + web"]
     end
 
-    Office -->|"Start / pause / revise / reject / decide / message"| Commands
-    Workspace -->|"Read / export / dispatch"| Commands
+    Office -->|"Mission commands"| Commands
+    Workspace -->|"Read + export + dispatch"| Commands
     Commands --> Brief
     Commands --> Planner
     Commands --> Runner
     Brief --> Model
     Brief -->|"Reviewed brief"| Runner
-    Planner -->|"New version and reusable work"| Runner
+    Planner -->|"New version"| Runner
     Runner --> Crust
     Runner --> Model
     Runner --> Evidence
@@ -168,8 +168,8 @@ flowchart TB
     Decision -->|"Needs input"| Events
     Package --> Model
     Package --> Cases
-    Commands -->|"Dispatch once per case version"| Package
-    Runner -->|"Task and tool lifecycle"| Events
+    Commands -->|"Versioned dispatch"| Package
+    Runner -->|"Task + tool events"| Events
     Planner -->|"Revision history"| Events
     Events --> Cases
     Events -.->|"/api/cases/:id/events"| Office
@@ -177,7 +177,7 @@ flowchart TB
     Crust <--> Cache
     Crust -->|"Sanitize before persistence"| Traces
     Crust -.->|"Trace updates"| Events
-    Traces -.->|"/api/crustdata/events + paginated reads"| AuditUI
+    Traces -.->|"Trace SSE + history"| AuditUI
     Model --> LLM
     Crust --> MCP
 
