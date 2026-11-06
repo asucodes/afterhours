@@ -116,17 +116,211 @@ Then open [localhost:3001](http://127.0.0.1:3001). Cases, cache entries, and req
 
 ## Architecture
 
+AfterHours combines a **versioned workflow**, **candidate-scoped evidence**, **bounded model steps**, and **persisted provider observability**. The office is the interface to that system. The diagrams below show the shipped implementation, including the paths taken when requirements change or a request fails.
+
+### System map
+
 ```mermaid
-flowchart LR
-    UI["React + Vite\nOffice · Chat · Case files"] <-->|"HTTP controls / SSE snapshots"| API["Express API"]
-    API --> Engine["Versioned workflow\nTasks · Evidence · Decisions"]
-    Engine <--> DB[("SQLite\nCases · Cache · Request audit")]
-    Engine --> Model["TokenHarbor / DeepSeek\nInterpret · Select · Assess · Write"]
-    Engine --> MCP["Crustdata MCP\nCompany · People · Web"]
-    Engine --> Output["Comparison · Quote drafts\nHandover · ZIP · Internal inbox"]
+flowchart TB
+    subgraph Browser["BROWSER · React + TypeScript + Vite"]
+        Office["Pixel headquarters + team chat<br/>Coworker state · Work log · Supervisor controls"]
+        Workspace["Case workspace + Mission state<br/>Shortlist · Evidence · Markdown · Revisions · Inbox"]
+        AuditUI["Crustdata request inspector<br/>Inputs · Responses · Attempts · Cache reuse"]
+    end
+
+    subgraph Backend["LOCAL BACKEND · Express / Node.js"]
+        Commands["HTTP command boundary<br/>Zod validation · expectedVersion checks"]
+        Brief["Brief interpretation<br/>Normalize missing fields · Derive requirements"]
+        Planner["Dependency-aware replanning<br/>Compare fields · Increment version<br/>Supersede affected tasks and artifacts"]
+        Runner["Workflow execution<br/>Reuse completed tasks · Deduplicate active starts<br/>Candidate batches of two · Pause and version gates"]
+        Evidence["Evidence and assessment controls<br/>Candidate association · Source-quality filters<br/>Citation normalization · Commercial unknowns"]
+        Decision["Qualification and decision gate<br/>Qualified candidate OR recorded exception"]
+        Package["Versioned handover<br/>Comparison · Quote drafts · Checklist<br/>ZIP export · Idempotent internal dispatch"]
+        Model["Model adapter<br/>Role-specific context · JSON parsing<br/>Zod output validation · Bounded repair"]
+        Crust["Crustdata adapter<br/>Tool allowlist · Fixed execute scripts<br/>Cache · Shared pacing · Retry and reconnect"]
+        Events["Persist and publish<br/>Case EventEmitter + trace EventEmitter<br/>SSE snapshots · Heartbeats"]
+    end
+
+    subgraph Storage["PERSISTENCE · SQLite / WAL"]
+        Cases[("cases<br/>Brief versions · Tasks · Evidence<br/>Messages · Artifacts · Decisions · Inbox")]
+        Cache[("cache<br/>Exact tool + parameters<br/>24-hour expiry")]
+        Traces[("crust_requests<br/>Sanitized inputs and response previews<br/>Attempt history · Case and version context")]
+    end
+
+    subgraph External["EXTERNAL PROVIDERS"]
+        LLM["TokenHarbor Chat Completions<br/>DeepSeek V4.1 Flash<br/>Interpret · Select · Assess · Write · Answer"]
+        MCP["Crustdata hosted MCP<br/>Streamable HTTP + server-side authentication<br/>Company · People · Public web tools"]
+    end
+
+    Office -->|"Start / pause / revise / reject / decide / message"| Commands
+    Workspace -->|"Read / export / dispatch"| Commands
+    Commands --> Brief
+    Commands --> Planner
+    Commands --> Runner
+    Brief --> Model
+    Brief -->|"Reviewed brief"| Runner
+    Planner -->|"New version and reusable work"| Runner
+    Runner --> Crust
+    Runner --> Model
+    Runner --> Evidence
+    Evidence --> Decision
+    Decision -->|"Proceed"| Package
+    Decision -->|"Needs input"| Events
+    Package --> Model
+    Package --> Cases
+    Commands -->|"Dispatch once per case version"| Package
+    Runner -->|"Task and tool lifecycle"| Events
+    Planner -->|"Revision history"| Events
+    Events --> Cases
+    Events -.->|"/api/cases/:id/events"| Office
+    Events -.->|"Case snapshots"| Workspace
+    Crust <--> Cache
+    Crust -->|"Sanitize before persistence"| Traces
+    Crust -.->|"Trace updates"| Events
+    Traces -.->|"/api/crustdata/events + paginated reads"| AuditUI
+    Model --> LLM
+    Crust --> MCP
+
+    classDef surface fill:#eaf0ff,stroke:#0052ff,color:#102248
+    classDef logic fill:#f4f6f8,stroke:#778397,color:#18212f
+    classDef gate fill:#fff3e4,stroke:#c47c26,color:#654214
+    classDef storage fill:#eeeafa,stroke:#8064bc,color:#392a59
+    classDef provider fill:#e7f5ef,stroke:#408269,color:#173e30
+    class Office,Workspace,AuditUI surface
+    class Commands,Brief,Planner,Runner,Evidence,Package,Model,Crust,Events logic
+    class Decision gate
+    class Cases,Cache,Traces storage
+    class LLM,MCP provider
 ```
 
-The frontend makes work visible; the backend owns execution. Candidate investigation and review run in batches of two, with a shared Crustdata dispatch limiter. Case state stays on the local machine; the prompts and evidence needed for inference and retrieval are sent to the configured external providers.
+**Solid arrows show execution or storage access. Dashed arrows show live observability.** These boxes are modules and tables in a single local backend, not separately deployed microservices. Required prompts and evidence are sent to the configured external providers; case storage stays local.
+
+### The sourcing pipeline and its decision boundary
+
+```mermaid
+flowchart TB
+    Request["Customer request"] --> Interpret["Asu: interpret and validate the brief<br/>Product · Geography · Capabilities · Deliverables<br/>Budget and deadline remain open when unspecified"]
+    Interpret --> Review["Customer reviews the editable brief"]
+    Review --> Start["Start the versioned mission"]
+    Start --> Discover["Sheer: company_search<br/>Hybrid retrieval of actual company records"]
+    Discover --> HasRows{"Usable company rows?"}
+    HasRows -->|"No"| WebFallback["web_search_live fallback<br/>Extract providers tied to returned URLs"]
+    HasRows -->|"Yes"| Select["Select up to three returned providers<br/>Exact-name mapping or visible fallback to real leads"]
+    WebFallback --> Select
+
+    subgraph CandidateWork["PER CANDIDATE · investigation followed by review · batches of two"]
+        Identity["Tan: resolve missing company ID<br/>company_identify when needed"]
+        Context["company_enrich + person_search<br/>Optional failures preserve coverage gaps"]
+        Public["web_search_live + web_enrich_live<br/>Public work, source pages, and website fallback"]
+        Sources["Filter and retain evidence<br/>Candidate ID · URL · Excerpt · Tool · Retrieval time<br/>Deduplicate identical candidate / URL / excerpt"]
+        Assessment["Yes: assess each requirement<br/>Supported · Contradicted · Unknown"]
+        Normalize["Normalize assessments in code<br/>Accept candidate-specific evidence IDs<br/>Missing citations become unknown<br/>Budget and availability require confirmation"]
+        Identity --> Context --> Public --> Sources --> Assessment --> Normalize
+    end
+
+    Select --> Identity
+    Normalize --> Qualifies{"Any non-rejected candidate<br/>clears required checks?"}
+    Qualifies -->|"Yes"| Write["Isit: generate the current package<br/>Comparison · Tailored inquiries · Handover"]
+    Qualifies -->|"No"| Handoff["needs_input<br/>Explain unresolved requirements"]
+    Handoff -->|"Revise requirements"| Interpret
+    Handoff -->|"Record quote-stage authorization"| Write
+    Write --> Artifacts["Persist current-version artifacts<br/>Keep prior versions superseded"]
+    Artifacts --> Export["Review Markdown / copy source / export ZIP"]
+    Artifacts --> Dispatch["Explicit internal dispatch<br/>Delivery key = case ID + brief version"]
+```
+
+The model supplies interpretation and content; application code enforces task execution, version checks, citation membership, decision boundaries, and delivery. The five roles share one configured model. They are not independent factual verifiers. Public-source research does not confirm a supplier’s current capacity or a project-specific quote.
+
+### What happens when the brief changes
+
+```mermaid
+sequenceDiagram
+    actor User as Customer
+    participant API as Express API
+    participant Parse as Brief interpreter
+    participant Plan as Replan rules
+    participant Run as Workflow runner
+    participant DB as SQLite case snapshot
+    participant UI as Office and Mission state
+
+    User->>API: Update deadline with expectedVersion
+    API->>API: Validate input and reject stale client version
+    opt Natural-language revision
+        API->>Parse: Existing brief + requested change
+        Parse-->>API: Validated replacement brief
+        API->>API: Recheck version after model response
+    end
+    API->>Plan: Compare old and new brief fields
+    Plan->>Plan: Increment version and clear prior exceptions
+    Plan->>Plan: Supersede tasks whose dependencies changed
+    Plan->>Plan: Retain evidence and unaffected assessments
+    Plan->>Plan: Supersede old deliverables
+    Plan-->>API: Changed fields and reuse / invalidation counts
+    API->>DB: Persist revision and publish replan event
+    DB-->>UI: SSE snapshot with new plan version
+    API->>Run: Start work for the new version
+    Run->>Run: Reuse eligible completed discovery / investigation
+    Run->>Run: Reassess candidates and rerun decision gate
+    Note over Run,DB: Version gates discard stale in-flight results at guarded boundaries
+    alt No candidate qualifies and no current exception
+        Run->>DB: Persist needs_input and the remaining gaps
+        DB-->>UI: Request customer decision
+    else Qualified or explicitly authorized for quote-stage work
+        Run->>Run: Regenerate the handover for the current brief
+        Run->>DB: Persist new artifacts and completion
+        DB-->>UI: Updated documents and work log
+    end
+```
+
+For a deadline-only change, discovery and company investigation remain reusable while review and deliverables reopen. Product, capability, geography, or deliverable changes can reopen earlier tasks too. On backend restart, interrupted running cases restore paused and interrupted working tasks queue for resume. This is persisted task recovery, not a distributed job queue; an unsaved external read can be repeated after a crash.
+
+### Inside a Crustdata request
+
+```mermaid
+flowchart TB
+    Call["Workflow tool request<br/>request ID + case ID + version + role"] --> Allow{"Allowlisted tool?"}
+    Allow -->|"No"| Reject["Reject before provider execution"]
+    Allow -->|"Yes"| Trace["Create queued capture<br/>Redact sensitive fields and configured secrets"]
+    Trace --> Eligible{"Cache-eligible execute call?"}
+    Eligible -->|"Yes"| Lookup["Look up exact tool + parameters<br/>Ignore entries older than 24 hours"]
+    Lookup --> Hit{"Fresh cached response?"}
+    Hit -->|"Yes"| Cached["Return cached data<br/>Persist cache reuse with no network attempt"]
+    Hit -->|"No"| Pace["Shared dispatch limiter<br/>Approximately 6.2-second spacing"]
+    Eligible -->|"No: credit or schema diagnostics"| Pace
+    Pace --> Connect["Record attempt; connect or reuse MCP session<br/>Track connection setup separately from sent calls"]
+    Connect --> Execute["Fixed backend-generated execute script<br/>get_schema for schema diagnostics<br/>120-second tool request timeout"]
+    Execute --> Decode["Decode MCP text / structured content<br/>Unwrap provider result and inspect errors"]
+    Decode --> Success{"Request succeeded?"}
+    Connect -->|"Connection error"| Retry
+    Success -->|"Yes"| Save["Cache eligible success<br/>Persist sanitized preview, timing, and attempt status"]
+    Success -->|"No"| Retry{"Transient failure<br/>and attempts remaining?"}
+    Retry -->|"Yes"| Reset["Reset MCP connection<br/>Bounded backoff · Maximum three attempts"]
+    Reset --> Pace
+    Retry -->|"No"| Failed["Persist failure and return error<br/>Optional steps retain gaps; critical steps block"]
+    Cached --> Updates["Trace EventEmitter / SSE<br/>Live inspector and paginated history"]
+    Save --> Updates
+    Failed --> Updates
+```
+
+Captures describe tool calls, not every HTTP packet or authentication handshake. Response previews are sanitized and capped at 16,000 characters. Failed connection setup is distinguishable from an actual sent tool call. TokenHarbor has a separate model adapter with bounded handling for selected HTTP failures, JSON parsing, Zod validation, and one structured-output repair round.
+
+### Implementation map
+
+| Responsibility | Implementation |
+| --- | --- |
+| API contracts, commands, ZIP export, and both SSE streams | [`server/index.ts`](server/index.ts) |
+| Dependency-injected workflow, task lifecycle, role calls, and version gates | [`server/workflow.ts`](server/workflow.ts) |
+| Field-level invalidation, candidate rejection, and delivery key | [`server/replan.ts`](server/replan.ts) |
+| Brief normalization and requirement construction | [`server/brief.ts`](server/brief.ts) |
+| Citation normalization, qualification, and commercial unknowns | [`server/decision.ts`](server/decision.ts) · [`shared/evidenceQuality.ts`](shared/evidenceQuality.ts) |
+| Model endpoint, parsing, validation repair, and shared pacing | [`server/providers.ts`](server/providers.ts) |
+| MCP execution, cache decisions, attempts, and reconnect policy | [`server/crustService.ts`](server/crustService.ts) |
+| Credential redaction and bounded response previews | [`server/traceSafety.ts`](server/traceSafety.ts) |
+| SQLite case snapshots, cache, request captures, and startup recovery | [`server/store.ts`](server/store.ts) · [`server/recovery.ts`](server/recovery.ts) |
+| Event-derived chat progress, request inspection, and mission history | [`src/progress.ts`](src/progress.ts) · [`src/CrustdataPane.tsx`](src/CrustdataPane.tsx) · [`src/MissionState.tsx`](src/MissionState.tsx) |
+| Spatial interface, collision-aware movement, and idle routines | [`src/OfficeMap.tsx`](src/OfficeMap.tsx) · [`src/officeWorld.ts`](src/officeWorld.ts) · [`src/ambient.ts`](src/ambient.ts) |
+
+The deployment remains a single local application. Authentication, tenant isolation, distributed workers, supplier outreach, payment execution, and Watcher-triggered monitoring are future work, not hidden components of these diagrams.
 
 ### Crustdata integration
 
