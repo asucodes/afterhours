@@ -1,0 +1,267 @@
+{
+  "BIN": {
+    "url": "/assets/pixel-agents/furniture/BIN/BIN.png",
+    "w": 16,
+    "h": 16
+  },
+  "BOOKSHELF": {
+    "url": "/assets/pixel-agents/furniture/BOOKSHELF/BOOKSHELF.png",
+    "w": 32,
+    "h": 16
+  },
+  "CACTUS": {
+    "url": "/assets/pixel-agents/furniture/CACTUS/CACTUS.png",
+    "w": 16,
+    "h": 32
+  },
+  "CLOCK": {
+    "url": "/assets/pixel-agents/furniture/CLOCK/CLOCK.png",
+    "w": 16,
+    "h": 32
+  },
+  "COFFEE": {
+    "url": "/assets/pixel-agents/furniture/COFFEE/COFFEE.png",
+    "w": 16,
+    "h": 16
+  },
+  "COFFEE_TABLE": {
+    "url": "/assets/pixel-agents/furniture/COFFEE_TABLE/COFFEE_TABLE.png",
+    "w": 32,
+    "h": 32
+  },
+  "CUSHIONED_BENCH": {
+    "url": "/assets/pixel-agents/furniture/CUSHIONED_BENCH/CUSHIONED_BENCH.png",
+    "w": 16,
+    "h": 16
+  },
+  "CUSHIONED_CHAIR_BACK": {
+    "url": "/assets/pixel-agents/furniture/CUSHIONED_CHAIR/CUSHIONED_CHAIR_BACK.png",
+    "w": 16,
+    "h": 16
+  },
+  "CUSHIONED_CHAIR_FRONT": {
+    "url": "/assets/pixel-agents/furniture/CUSHIONED_CHAIR/CUSHIONED_CHAIR_FRONT.png",
+    "w": 16,
+    "h": 16
+  },
+  "CUSHIONED_CHAIR_SIDE": {
+    "url": "/assets/pixel-agents/furniture/CUSHIONED_CHAIR/CUSHIONED_CHAIR_SIDE.png",
+    "w": 16,
+    "h": 16
+  },
+  "DESK_FRONT": {
+    "url": "/assets/pixel-agents/furniture/DESK/DESK_FRONT.png",
+    "w": 48,
+    "h": 32
+  },
+  "DESK_SIDE": {
+    "url": "/assets/pixel-agents/furniture/DESK/DESK_SIDE.png",
+    "w": 16,
+    "h": 64
+  },
+  "DOUBLE_BOOKSHELF": {
+    "url": "/assets/pixel-agents/furniture/DOUBLE_BOOKSHELF/DOUBLE_BOOKSHELF.png",
+    "w": 32,
+    "h": 32
+  },
+  "HANGING_PLANT": {
+    "url": "/assets/pixel-agents/furniture/HANGING_PLANT/HANGING_PLANT.png",
+    "w": 16,
+    "h": 32
+  },
+  "LARGE_PAINTING": {
+    "url": "/assets/pixel-agents/furniture/LARGE_PAINTING/LARGE_PAINTING.png",
+    "w": 32,
+    "h": 32
+  },
+  "LARGE_PLANT": {
+    "url": "/assets/pixel-agents/furniture/LARGE_PLANT/LARGE_PLANT.png",
+    "w": 32,
+    "h": 48
+  },
+  "PC_BACK": {
+    "url": "/assets/pixel-agents/furniture/PC/PC_BACK.png",
+    "w": 16,
+    "h": 32
+  },
+  "PC_FRONT_OFF": {
+    "url": "/assets/pixel-agents/furniture/PC/PC_FRONT_OFF.png",
+    "w": 16,
+    "h": 32
+  },
+  "PC_FRONT_ON_1": {
+    "url": "/assets/pixel-agents/furniture/PC/PC_FRONT_ON_1.png",
+    "w": 16,
+    "h": 32
+  },
+  "PC_FRONT_ON_2": {
+    "url": "/assets/pixel-agents/furniture/PC/PC_FRONT_ON_2.png",
+    "w": 16,
+    "h": 32
+  },
+  "PC_FRONT_ON_3": {
+    "url": "/assets/pixel-agents/furniture/PC/PC_FRONT_ON_3.png",
+    "w": 16,
+    "h": 32
+  },
+  "PC_SIDE": {
+    "url": "/assets/pixel-agents/furniture/PC/PC_SIDE.png",
+    "w": 16,
+    "h": 32
+  },
+  "PLANT": {
+    "url": "/assets/pixel-agents/furniture/PLANT/PLANT.png",
+    "w": 16,
+    "h": 32
+  },
+  "PLANT_2": {
+    "url": "/assets/pixel-agents/furniture/PLANT_2/PLANT_2.png",
+    "w": 16,
+    "h": 32
+  },
+  "POT": {
+    "url": "/assets/pixel-agents/furniture/POT/POT.png",
+    "w": 16,
+    "h": 16
+  },
+  "SMALL_PAINTING": {
+    "url": "/assets/pixel-agents/furniture/SMALL_PAINTING/SMALL_PAINTING.png",
+    "w": 16,
+    "h": 32
+  },
+  "SMALL_PAINTING_2": {
+    "url": "/assets/pixel-agents/furniture/SMALL_PAINTING_2/SMALL_PAINTING_2.png",
+    "w": 16,
+    "h": 32
+  },
+  "SMALL_TABLE_FRONT": {
+    "url": "/assets/pixel-agents/furniture/SMALL_TABLE/SMALL_TABLE_FRONT.png",
+    "w": 32,
+    "h": 32
+  },
+  "SMALL_TABLE_SIDE": {
+    "url": "/assets/pixel-agents/furniture/SMALL_TABLE/SMALL_TABLE_SIDE.png",
+    "w": 16,
+    "h": 48
+  },
+  "SOFA_BACK": {
+    "url": "/assets/pixel-agents/furniture/SOFA/SOFA_BACK.png",
+    "w": 32,
+    "h": 16
+  },
+  "SOFA_FRONT": {
+    "url": "/assets/pixel-agents/furniture/SOFA/SOFA_FRONT.png",
+    "w": 32,
+    "h": 16
+  },
+  "SOFA_SIDE": {
+    "url": "/assets/pixel-agents/furniture/SOFA/SOFA_SIDE.png",
+    "w": 16,
+    "h": 32
+  },
+  "TABLE_FRONT": {
+    "url": "/assets/pixel-agents/furniture/TABLE_FRONT/TABLE_FRONT.png",
+    "w": 48,
+    "h": 64
+  },
+  "WHITEBOARD": {
+    "url": "/assets/pixel-agents/furniture/WHITEBOARD/WHITEBOARD.png",
+    "w": 32,
+    "h": 32
+  },
+  "WOODEN_BENCH": {
+    "url": "/assets/pixel-agents/furniture/WOODEN_BENCH/WOODEN_BENCH.png",
+    "w": 16,
+    "h": 16
+  },
+  "WOODEN_CHAIR_BACK": {
+    "url": "/assets/pixel-agents/furniture/WOODEN_CHAIR/WOODEN_CHAIR_BACK.png",
+    "w": 16,
+    "h": 32
+  },
+  "WOODEN_CHAIR_FRONT": {
+    "url": "/assets/pixel-agents/furniture/WOODEN_CHAIR/WOODEN_CHAIR_FRONT.png",
+    "w": 16,
+    "h": 32
+  },
+  "WOODEN_CHAIR_SIDE": {
+    "url": "/assets/pixel-agents/furniture/WOODEN_CHAIR/WOODEN_CHAIR_SIDE.png",
+    "w": 16,
+    "h": 32
+  },
+  "char_0": {
+    "url": "/assets/pixel-agents/characters/char_0.png",
+    "w": 112,
+    "h": 96
+  },
+  "char_1": {
+    "url": "/assets/pixel-agents/characters/char_1.png",
+    "w": 112,
+    "h": 96
+  },
+  "char_2": {
+    "url": "/assets/pixel-agents/characters/char_2.png",
+    "w": 112,
+    "h": 96
+  },
+  "char_3": {
+    "url": "/assets/pixel-agents/characters/char_3.png",
+    "w": 112,
+    "h": 96
+  },
+  "char_4": {
+    "url": "/assets/pixel-agents/characters/char_4.png",
+    "w": 112,
+    "h": 96
+  },
+  "char_5": {
+    "url": "/assets/pixel-agents/characters/char_5.png",
+    "w": 112,
+    "h": 96
+  },
+  "floor_0": {
+    "url": "/assets/pixel-agents/floors/floor_0.png",
+    "w": 16,
+    "h": 16
+  },
+  "floor_1": {
+    "url": "/assets/pixel-agents/floors/floor_1.png",
+    "w": 16,
+    "h": 16
+  },
+  "floor_2": {
+    "url": "/assets/pixel-agents/floors/floor_2.png",
+    "w": 16,
+    "h": 16
+  },
+  "floor_3": {
+    "url": "/assets/pixel-agents/floors/floor_3.png",
+    "w": 16,
+    "h": 16
+  },
+  "floor_4": {
+    "url": "/assets/pixel-agents/floors/floor_4.png",
+    "w": 16,
+    "h": 16
+  },
+  "floor_5": {
+    "url": "/assets/pixel-agents/floors/floor_5.png",
+    "w": 16,
+    "h": 16
+  },
+  "floor_6": {
+    "url": "/assets/pixel-agents/floors/floor_6.png",
+    "w": 16,
+    "h": 16
+  },
+  "floor_7": {
+    "url": "/assets/pixel-agents/floors/floor_7.png",
+    "w": 16,
+    "h": 16
+  },
+  "floor_8": {
+    "url": "/assets/pixel-agents/floors/floor_8.png",
+    "w": 16,
+    "h": 16
+  }
+}
