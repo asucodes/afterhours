@@ -3,6 +3,7 @@
   <h1>AfterHours</h1>
   <p><strong>Business doesn’t clock out. Meet your night shift.</strong></p>
   <p>Five specialist AI coworkers. One business emergency. A clear next move.</p>
+  <p><img src="docs/images/night-shift.png" alt="Meet the night shift: Asu coordinates the brief, Sheer discovers providers, Tan researches sources, Yes checks requirements, and Isit prepares the handover." width="100%" /></p>
   <p>
     <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&amp;logo=typescript&amp;logoColor=white" />
     <img alt="Node.js 24.2 or newer" src="https://img.shields.io/badge/Node.js-24.2%2B-20252D?style=flat-square&amp;logo=nodedotjs&amp;logoColor=white" />
