@@ -1,0 +1,9 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+import {normalizeAssessments,hasQualifiedCandidate} from '../server/decision';
+import type {Brief,Evidence,Candidate,Assessment} from '../shared/types';
+const brief:Brief={title:'Launch',product:'SaaS',deadline:'Friday',budget:'₹3 lakh',geography:'',deliverables:[],mustHaves:[],preferences:[],exclusions:[],requirements:[{id:'capability',label:'SaaS experience',field:'product',required:true},{id:'budget',label:'Budget',field:'budget',required:true},{id:'deadline',label:'Availability',field:'deadline',required:true}]};
+const source:Evidence={id:'real',url:'https://example.com/case',title:'Case study',excerpt:'A SaaS case study',retrievedAt:'',kind:'web',tool:'web'};
+const claims:Assessment[]=brief.requirements.map(r=>({requirementId:r.id,status:'supported',reason:'The model says yes.',evidenceIds:['real']}));
+test('public research cannot confirm a scoped quote or current availability',()=>{const a=normalizeAssessments(brief,claims,[source]);assert.equal(a[0].status,'supported');assert.equal(a[1].status,'unknown');assert.equal(a[2].status,'unknown');});
+test('invented citations cannot support positive or negative decisions',()=>{for(const status of ['supported','contradicted'] as const){const a=normalizeAssessments(brief,[{requirementId:'capability',status,reason:'Uncited',evidenceIds:['invented']}],[source]);assert.equal(a[0].status,'unknown');assert.deepEqual(a[0].evidenceIds,[]);}});
+test('a missing required assessment prevents qualification',()=>{const c:Candidate={id:'c',name:'Agency',domain:'example.com',description:'',rejected:false,summary:'',assessments:normalizeAssessments(brief,claims,[source])};assert.equal(hasQualifiedCandidate(brief,[c]),false);c.assessments=claims;assert.equal(hasQualifiedCandidate(brief,[c]),true);c.rejected=true;assert.equal(hasQualifiedCandidate(brief,[c]),false);});

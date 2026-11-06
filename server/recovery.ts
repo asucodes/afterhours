@@ -1,0 +1,2 @@
+import type {CaseRecord} from '../shared/types';
+export function recoverCase(c:CaseRecord){if(c.status!=='running')return false;c.status='paused';c.messages.push({id:crypto.randomUUID(),role:'coordinator',text:'The night shift was interrupted. Your evidence is safe. Resume when you’re ready.',at:new Date().toISOString()});for(const t of c.tasks)if(t.status==='working')t.status='queued';return true;}
