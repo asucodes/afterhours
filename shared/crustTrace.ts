@@ -1,0 +1,4 @@
+import type {Role} from './types';
+export interface CrustAttempt {number:number;startedAt:string;finishedAt?:string;durationMs?:number;sent:boolean;status:'running'|'succeeded'|'failed'|'interrupted';error?:string;}
+export interface CrustTrace {id:string;caseId?:string;version?:number;role?:Role;tool:string;method:'execute'|'get_schema';endpoint:string;startedAt:string;finishedAt?:string;durationMs?:number;status:'queued'|'running'|'succeeded'|'failed'|'cached'|'interrupted';params:unknown;responsePreview?:string;responseBytes?:number;previewTruncated?:boolean;attempts:CrustAttempt[];error?:string;}
+export interface CrustTraceSnapshot {requests:CrustTrace[];total:number;hasMore:boolean;nextCursor?:string;captureStartedAt?:string;counts:{networkAttempts:number;cacheHits:number;failed:number;active:number};}
