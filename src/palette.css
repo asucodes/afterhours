@@ -1,0 +1,86 @@
+/* Neutral surfaces and a single decisive blue, inspired by the Coinbase reference. */
+:root,html[data-theme=light]{--ink:#0a0b0d;--secondary:#5b616e;--edge:#e3e5e8;--surface:#fff;--soft:#f5f6f8;--blue:#0052ff;--blue-hover:#0046db;--blue-soft:#eef3ff;--bg:#f5f6f8;--panel:#fff;--line:#e3e5e8;--muted:#5b616e;--accent:#0052ff;--reading:#20242b;--reading-muted:#5b616e;--reading-line:#e3e5e8;--reading-surface:#f7f8fa;--reading-code:#f0f2f5;--reading-link:#0052ff;color:#0a0b0d;background:#fff}
+html[data-theme=dark]{--ink:#f5f7fa;--secondary:#a6adbb;--edge:#2a2d36;--surface:#141519;--soft:#1e2026;--blue:#578bff;--blue-hover:#76a0ff;--blue-soft:#1c2b4c;--bg:#0a0b0d;--panel:#141519;--line:#2a2d36;--muted:#a6adbb;--accent:#578bff;--reading:#e7eaf0;--reading-muted:#a6adbb;--reading-line:#2a2d36;--reading-surface:#191b21;--reading-code:#22252d;--reading-link:#82a8ff;color:var(--ink);background:#0a0b0d}
+html[data-theme] :is(.app-shell,.main-shell,.main-content){background:var(--bg)}
+html[data-theme] :is(.topbar,.command-panel,.agent-header,.chat-scroll,.activity-scroll,.modal,.history-menu,.conversation-picker,.nav-open .rail){background:var(--surface);border-color:var(--edge)}
+html[data-theme] :is(.case-workspace,.inbox-workspace,.state-page){background:var(--surface);color:var(--ink)}
+html[data-theme] .wordmark{color:var(--ink)}
+html[data-theme] :is(.workspace-heading h2,.inbox-workspace h2,.state-heading h2,.modal h2,.agent-header strong,.candidate-top h3,.state-card h3,.state-team strong,.state-task-row strong,.document-card>button,.inbox-card h3){color:var(--ink)}
+html[data-theme] :is(.tagline,.message-byline small,.agent-header small,.agent-header strong>span,.document-card small,.state-heading p,.state-card dt,.state-team p,.state-team strong small,.state-revision small,.state-task-row>div>small,.task-version,.workspace-heading .eyebrow,.state-heading .eyebrow,.composer textarea::placeholder){color:var(--secondary)}
+html[data-theme] .chat-message .markdown{color:var(--reading)}
+html[data-theme] .message-byline strong{color:var(--ink)}
+html[data-theme] .header-separator{color:var(--edge)}
+html[data-theme] .panel-toggle.active{background:var(--blue-soft);color:var(--blue)}
+html[data-theme] .history-button{background:var(--soft);border-color:transparent;color:var(--ink);border-radius:20px;padding:10px 16px}
+html[data-theme] .panel-toggle{border-radius:20px;padding:10px 14px}
+html[data-theme] :is(.history-menu button:hover,.conversation-picker button:hover,.icon-button:hover){background:var(--soft);color:var(--ink)}
+html[data-theme] :is(.button.primary,.chat-scroll>.button.primary,.send-button){background:var(--blue);border-color:var(--blue);color:#fff;border-radius:8px;font-weight:550}
+html[data-theme=dark] :is(.button.primary,.chat-scroll>.button.primary,.send-button){background:#0052ff;border-color:#0052ff;color:#fff}
+html[data-theme] :is(.button.primary:hover:not(:disabled),.chat-scroll>.button.primary:hover){background:#0046db;color:#fff}
+html[data-theme] .send-button:disabled{background:var(--edge);border-color:var(--edge);color:var(--secondary)}
+html[data-theme] .button.secondary{background:var(--soft);border-color:var(--edge);color:var(--ink);border-radius:8px}
+html[data-theme] :is(.text-link,.message-expand,.workspace-back,.evidence-card>a,.candidate-top a,.assessment a){color:var(--blue)}
+html[data-theme] :is(.workspace-tabs button.active,.state-tabs button.active){color:var(--blue);border-color:var(--blue)}
+html[data-theme] :is(.workspace-tabs span,.state-tabs button>span){background:var(--soft);color:var(--secondary)}
+html[data-theme] :is(.candidate-card,.document-card,.evidence-card,.inbox-card,.state-card,.state-task-table,.state-stages>div){background:var(--surface);border-color:var(--edge)}
+html[data-theme] :is(.composer,.starter-card,.brief-card){background:var(--soft);border-color:var(--edge)}
+html[data-theme] .composer{border-radius:12px;padding:14px}
+html[data-theme] .composer:focus-within{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue-soft)}
+html[data-theme] .composer textarea{color:var(--ink);font-size:14px}
+html[data-theme] .supervisor-bar{background:var(--surface);border-color:var(--edge)}
+html[data-theme] .supervisor-bar button{color:var(--secondary)}
+html[data-theme] .chat-message.user-message{background:var(--blue-soft);color:var(--ink)}
+html[data-theme] .chat-message.user-message .markdown{color:var(--ink)}
+html[data-theme] .document-view-tabs button.active{background:var(--surface);color:var(--ink)}
+html[data-theme] .theme-options button{background:var(--soft);color:var(--secondary);border-color:var(--edge);border-radius:10px}
+html[data-theme] .theme-options button[aria-pressed=true]{background:var(--blue-soft);color:var(--blue);border-color:var(--blue);box-shadow:none}
+html[data-theme] .brief-form input,html[data-theme] .brief-form textarea{color:var(--ink);background:var(--soft);border-color:var(--edge)}
+html[data-theme] .nav-open .rail-button.selected{background:var(--blue-soft);color:var(--blue)}
+html[data-theme] .world-viewport,html[data-theme] .scene-card{background:var(--bg)}
+html[data-theme] .camera-controls{background:var(--surface);border-color:var(--edge);opacity:.9}
+html[data-theme] .camera-controls button,html[data-theme] .camera-controls span{color:var(--secondary)}
+html[data-theme] .world-tooltip{background:var(--surface);border-color:var(--edge)}
+html[data-theme] .world-tooltip strong{color:var(--ink)}
+html[data-theme] .world-tooltip>span{color:var(--secondary)}
+html[data-theme] .task-status.done,html[data-theme] .state-badge.complete{background:var(--soft);border-color:var(--edge);color:var(--ink)}
+html[data-theme] .state-stages .done>span{background:var(--blue-soft);color:var(--blue)}
+html[data-theme] .state-stages .done strong{color:var(--ink)}
+html[data-theme] .state-stages .working{border-color:var(--blue);background:var(--blue-soft)}
+.markdown{font-size:14px;line-height:1.85}.markdown-compact{font-size:14px;line-height:1.8}.state-heading h2,.workspace-heading h2{font-weight:600;letter-spacing:-.8px}.document-card{border-radius:12px}.document-toolbar{padding:10px 20px}.document-viewer>.markdown{padding:28px 32px 36px}
+html[data-theme] .menu-trigger span{background:var(--secondary)}
+html[data-theme] .agent-header small i{background:#098551}
+html[data-theme] .avatar{background:var(--soft)!important;border-color:var(--edge)!important}
+html[data-theme] .team-promise .mini-avatars .avatar{background:var(--soft)!important;border-color:var(--edge)!important}
+html[data-theme] .state-badge{background:var(--soft);border-color:var(--edge);color:var(--secondary)}
+/* Drawer uses the same type hierarchy as the main workspace. */
+html[data-theme] .nav-open .rail{width:244px;background:var(--surface);border-color:var(--edge);box-shadow:12px 0 40px #0a0b0d10}
+html[data-theme] .nav-scrim{left:244px;background:#0a0b0d24}
+html[data-theme] .nav-open .sidebar-workspace{margin:24px 18px 28px;color:var(--ink);font-size:14px;font-weight:550;letter-spacing:-.2px}
+html[data-theme] .nav-open .sidebar-workspace small{color:var(--secondary);font-size:11px;font-weight:400;margin-top:5px}
+html[data-theme] .nav-open .workspace-symbol{background:var(--blue-soft);border-color:transparent;color:var(--blue);font:600 16px 'Geist',sans-serif;border-radius:10px}
+html[data-theme] .nav-open .sidebar-section-label{color:var(--secondary);font:500 10px 'Geist',sans-serif;letter-spacing:.8px;margin-bottom:10px}
+html[data-theme] .nav-open .rail-main{padding:0 14px;gap:5px}
+html[data-theme] .nav-open .rail-button{font-size:14px;font-weight:500;letter-spacing:-.15px;height:44px;padding:0 12px;color:var(--ink);border:0;border-radius:10px;gap:12px}
+html[data-theme] .nav-open .rail-button svg{color:var(--secondary);height:18px;width:18px;stroke-width:1.7}
+html[data-theme] .nav-open .rail-button:hover{background:var(--soft);color:var(--ink)}
+html[data-theme] .nav-open .rail-button.selected{background:var(--blue-soft);color:var(--blue)}
+html[data-theme] .nav-open .rail-button.selected svg{color:var(--blue)}
+html[data-theme] .nav-open .rail-button b{background:var(--soft);color:var(--secondary);font:500 10px 'Geist',sans-serif;min-width:20px;padding:3px 5px;border:0}
+html[data-theme] .nav-open .sidebar-team{padding:0 14px;margin-top:28px}
+html[data-theme] .nav-open .sidebar-team>button{padding:10px;border:1px solid transparent;border-radius:10px;gap:10px}
+html[data-theme] .nav-open .sidebar-team strong{color:var(--ink);font-size:13px;font-weight:550;letter-spacing:-.1px}
+html[data-theme] .nav-open .sidebar-team small{color:var(--secondary);font-size:11px;margin-top:3px}
+html[data-theme] .nav-open .sidebar-team>button:hover,html[data-theme] .nav-open .sidebar-team>button.selected{background:var(--soft);border-color:transparent}
+html[data-theme] .nav-open .sidebar-team>button>i{background:#098551}
+html[data-theme] .nav-open .sidebar-section-label>span{background:var(--soft);color:var(--secondary)}
+html[data-theme] .nav-open .sidebar-mission{border-color:var(--edge);margin:26px 20px 18px}
+html[data-theme] .nav-open .sidebar-mission>strong{color:var(--ink);font-size:12px;font-weight:500;line-height:1.7}
+html[data-theme] .nav-open .sidebar-mission>span:not(.sidebar-section-label){color:var(--secondary);font-size:10px;line-height:1.7}
+html[data-theme] .nav-open .sidebar-mission>button{color:var(--blue);font-size:12px;padding:10px 0}
+html[data-theme] .nav-open .sidebar-user{border-color:var(--edge);padding:17px 6px 0;gap:10px}
+html[data-theme] .nav-open .sidebar-user>span:nth-child(2){color:var(--ink);font-size:13px;font-weight:500}
+html[data-theme] .nav-open .sidebar-user small{color:var(--secondary);font-size:10px;font-weight:400}
+html[data-theme] .nav-open .sidebar-user>svg{color:var(--secondary)}
+html[data-theme] .nav-open .user-avatar{background:var(--soft);color:var(--ink);border-color:var(--edge);font:500 11px 'Geist',sans-serif}
+html[data-theme] ::selection{background:#0052ff;color:white}
+html[data-theme] ::-webkit-scrollbar-thumb{background:var(--edge)}
